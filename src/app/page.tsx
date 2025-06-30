@@ -21,7 +21,9 @@ const Home: React.FunctionComponent = () => {
 
   const getArticlesList = async () => {
     try {
-      const { data } = await apiCall.get("/articles?pageSize=100");
+      const { data } = await apiCall.get(
+        "/articles?pageSize=100&sortBy=%60created%60%20desc"
+      );
       setArticleList(data);
     } catch (error) {
       console.log(error);
