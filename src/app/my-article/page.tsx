@@ -2,7 +2,6 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { FaImage } from "react-icons/fa";
-import { callAPI } from "@/config/axios";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -23,17 +22,10 @@ const PostPage: React.FunctionComponent = () => {
 
   const getArticlesList = async () => {
     try {
-      const { data } = await callAPI.get(`/articles`);
-
-      setPostsList(data);
     } catch (error) {
       console.log(error);
     }
   };
-
-  React.useEffect(() => {
-    getArticlesList();
-  }, []);
 
   const printPostsList = () => {
     return postsList.map((val: any, idx: number) => {

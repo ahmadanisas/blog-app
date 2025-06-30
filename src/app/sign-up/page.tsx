@@ -2,29 +2,30 @@
 import * as React from "react";
 import Image from "next/image";
 import AccountImage from "../../../public/access_account.svg";
-import { callAPI } from "@/config/axios";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FormInput from "@/components/core/FormInput";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import { apiCall } from "@/helper/apiCall";
 
 const SignUpPage: React.FunctionComponent = () => {
   const router = useRouter();
 
   // Refs untuk semua field input
-  const usernameRef = React.useRef<HTMLInputElement>(null);
-  const emailRef = React.useRef<HTMLInputElement>(null);
+  const inUsernameRef = React.useRef<HTMLInputElement>(null);
+  const inEmailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
   const confPasswordRef = React.useRef<HTMLInputElement>(null);
 
   const onSignUp = async () => {
     try {
       // - mengambil value dari form input
-      const username = usernameRef.current?.value || "";
-      const email = emailRef.current?.value || "";
-      const password = passwordRef.current?.value || "";
-      const confPassword = confPasswordRef.current?.value || "";
+      const username = inUsernameRef.current?.value;
+      const email = inEmailRef.current?.value;
+      const password = passwordRef.current?.value;
+      const confPassword = confPasswordRef.current?.value;
+      console.log(inUsernameRef.current?.value);
+      console.log(inEmailRef.current?.value);
 
       // - memeriksa apakah semua form sudah diisi
       if (!username && !email && !password && !confPassword) {
@@ -38,19 +39,19 @@ const SignUpPage: React.FunctionComponent = () => {
         return;
       }
 
+      console.log(username, email, password);
+
       // - menyimpan data ke database backendless
-      const response = await axios.post(
-        "https://manygirls-us.backendless.app/api/data/articles",
-        {
-          username,
-          email,
-          password,
-        }
-      );
+      const response = await apiCall.post("/accounts", {
+        username,
+        email,
+        password,
+      });
 
       console.log(response.data);
 
       alert("Pendaftaran akun berhasil");
+      //
       router.push("/sign-in");
     } catch (error) {
       console.error(error);
@@ -91,13 +92,13 @@ const SignUpPage: React.FunctionComponent = () => {
                     type="text"
                     name="username"
                     label="Username"
-                    ref={usernameRef}
+                    ref={inUsernameRef}
                   />
                   <FormInput
-                    type="text"
+                    type="email"
                     name="email"
                     label="Email"
-                    ref={emailRef}
+                    ref={inEmailRef}
                   />
                   <FormInput
                     type="password"
