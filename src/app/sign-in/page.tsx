@@ -4,14 +4,32 @@ import * as React from "react";
 import AccountImage from "../../../public/access_account.svg";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { apiCall } from "@/helper/apiCall";
+import { useRouter } from "next/navigation";
 
 const SignInPage: React.FunctionComponent = () => {
+  const router = useRouter();
   // Refs for form inputs
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
-
   const onSignIn = async () => {
     try {
+      const email = emailRef.current?.value;
+      const password = passwordRef.current?.value;
+      if (!email && !password) {
+        alert("Isi semua form");
+        return;
+      }
+      const res = await apiCall.get("/accounts", {
+        params: {
+          where: `email = '${email}' AND password = '${password}'`,
+        },
+      });
+
+      console.log(res.data);
+
+      alert("Selamat datang");
+      router.replace("/");
     } catch (error) {
       console.error(error);
       alert("Something went wrong");
@@ -44,6 +62,7 @@ const SignInPage: React.FunctionComponent = () => {
                 <Button
                   type="button"
                   className="bg-slate-700 text-white px-4 py-2 shadow"
+                  onClick={onSignIn}
                 >
                   Sign In
                 </Button>
