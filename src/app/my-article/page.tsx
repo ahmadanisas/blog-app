@@ -19,20 +19,28 @@ const PostPage: React.FunctionComponent = () => {
   const articleThumbnailRef = React.useRef<HTMLInputElement>(null);
   const articleCategoryRef = React.useRef<string | null>(null);
 
-  const [postsList, setPostsList] = React.useState<any[]>([]);
+  const [articleList, setArticleList] = React.useState<any[]>([]);
 
   const getArticlesList = async () => {
     try {
+      const res = await apiCall.get("/articles?sortBy=%60created%60%20desc");
+
+      setArticleList(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const printPostsList = () => {
-    return postsList.map((val: any, idx: number) => {
+  // useEffect hanya akan menjalankan fungsi didalamnya sekali saat pertama kali render halaman
+  React.useEffect(() => {
+    getArticlesList();
+  }, []);
+
+  const printArticleList = () => {
+    return articleList.map((val: any, idx: number) => {
       return (
         <div
-          key={val.objectId}
+          key={idx}
           className="w-full p-4 flex items-center rounded-md bg-white cursor-pointer"
         >
           <div className="w-full rounded-e-xl">
@@ -72,8 +80,8 @@ const PostPage: React.FunctionComponent = () => {
           thumbnail: articleThumbnailRef.current?.value,
           content: articleContentRef.current?.value,
         });
-        alert("Tambah data article berhasil");
         getArticlesList();
+        alert("Tambah data article berhasil");
       } else {
         alert("Form article jangan sampai kosong");
       }
@@ -131,7 +139,7 @@ const PostPage: React.FunctionComponent = () => {
           </div>
         </div>
       </div>
-      <div className="lg:w-1/2 space-y-3">{printPostsList()}</div>
+      <div className="lg:w-1/2 space-y-3">{printArticleList()}</div>
     </div>
   );
 };
