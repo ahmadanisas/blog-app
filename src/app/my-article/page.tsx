@@ -10,10 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { apiCall } from "@/helper/apiCall";
 
 const PostPage: React.FunctionComponent = () => {
   const router = useRouter();
-  const articleFormRef = React.useRef<any>(null);
+  const articleContentRef = React.useRef<HTMLTextAreaElement>(null);
   const articleTitleRef = React.useRef<HTMLInputElement>(null);
   const articleThumbnailRef = React.useRef<HTMLInputElement>(null);
   const articleCategoryRef = React.useRef<string | null>(null);
@@ -65,16 +66,16 @@ const PostPage: React.FunctionComponent = () => {
   const onCreateArticle = async () => {
     try {
       if (articleTitleRef.current) {
-        const response = await callAPI.post("/articles", {
+        const response = await apiCall.post("/articles", {
           title: articleTitleRef.current.value,
           category: articleCategoryRef.current,
           thumbnail: articleThumbnailRef.current?.value,
-          content: articleFormRef.current.getContent(),
+          content: articleContentRef.current?.value,
         });
         alert("Tambah data article berhasil");
         getArticlesList();
       } else {
-        alert("Form todo jangan sampai kosong");
+        alert("Form article jangan sampai kosong");
       }
     } catch (error) {
       console.log(error);
@@ -112,7 +113,7 @@ const PostPage: React.FunctionComponent = () => {
               </SelectContent>
             </Select>
           </div>
-          <textarea ref={articleFormRef} />
+          <textarea ref={articleContentRef} />
           <hr className="md:mb-4" />
           <div className="flex p-2 justify-between items-center">
             <div className="flex gap-2">
