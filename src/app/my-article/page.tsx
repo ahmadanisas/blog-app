@@ -23,7 +23,9 @@ const PostPage: React.FunctionComponent = () => {
 
   const getArticlesList = async () => {
     try {
-      const res = await apiCall.get("/articles?sortBy=%60created%60%20desc");
+      const res = await apiCall.get(
+        "/articles?pageSize=100&sortBy=%60created%60%20desc"
+      );
 
       setArticleList(res.data);
     } catch (error) {
