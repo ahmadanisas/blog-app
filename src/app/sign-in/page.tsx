@@ -6,9 +6,12 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { apiCall } from "@/helper/apiCall";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/lib/redux/hooks";
+import { setSignIn } from "@/lib/redux/features/userSlice";
 
 const SignInPage: React.FunctionComponent = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   // Refs for form inputs
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
@@ -25,7 +28,7 @@ const SignInPage: React.FunctionComponent = () => {
           where: `email = '${email}' AND password = '${password}'`,
         },
       });
-
+      dispatch(setSignIn(res.data[0]));
       console.log(res.data);
 
       alert("Selamat datang");
