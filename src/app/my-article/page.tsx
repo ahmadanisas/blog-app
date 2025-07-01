@@ -91,7 +91,7 @@ const PostPage: React.FunctionComponent = () => {
                 >
                   Delete
                 </Button>
-                <UpdateArticleDialog />
+                <UpdateArticleDialog data={val} />
               </div>
             </div>
           </div>
