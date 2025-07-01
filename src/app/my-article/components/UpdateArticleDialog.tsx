@@ -12,9 +12,11 @@ import FormInput from "@/components/core/FormInput";
 import {
   Select,
   SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { dataCategory } from "@/helper/dataCategory";
 
 interface IUpdateArticleDialogProps {
   data: any;
@@ -45,10 +47,18 @@ const UpdateArticleDialog: React.FunctionComponent<
             <div>
               <label className="mb-2 font-medium">Category</label>
               <Select>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Category" />
                 </SelectTrigger>
-                <SelectContent></SelectContent>
+                <SelectContent>
+                  {dataCategory.map((val: string) => {
+                    return (
+                      <SelectItem key={val} value={val}>
+                        {val}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
               </Select>
             </div>
           </div>
