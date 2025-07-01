@@ -2,8 +2,10 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -78,6 +80,12 @@ const UpdateArticleDialog: React.FunctionComponent<
             </div>
           </div>
         </DialogContent>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button type="button">Save changes</Button>
+        </DialogFooter>
       </form>
     </Dialog>
   );
