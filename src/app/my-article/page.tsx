@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { apiCall } from "@/helper/apiCall";
+import { toast } from "react-toastify";
 
 const PostPage: React.FunctionComponent = () => {
   const router = useRouter();
@@ -42,6 +43,9 @@ const PostPage: React.FunctionComponent = () => {
     try {
       if (confirm("Yakin mau menghapus ?")) {
         await apiCall.delete(`/articles/${objectId}`);
+        toast.success("Delete article success", {
+          autoClose: 3000,
+        });
         getArticlesList();
       }
     } catch (error) {
