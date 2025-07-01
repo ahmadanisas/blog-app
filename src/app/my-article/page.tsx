@@ -45,7 +45,11 @@ const PostPage: React.FunctionComponent = () => {
 
   // useEffect hanya akan menjalankan fungsi didalamnya sekali saat pertama kali render halaman
   React.useEffect(() => {
-    getArticlesList();
+    if (localStorage.getItem("tkn")) {
+      getArticlesList();
+    } else {
+      router.replace("/sign-in");
+    }
   }, []);
 
   const onDelete = async (objectId: string) => {

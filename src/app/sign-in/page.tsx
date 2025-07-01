@@ -41,6 +41,12 @@ const SignInPage: React.FunctionComponent = () => {
     }
   };
 
+  React.useEffect(() => {
+    if (localStorage.getItem("tkn")) {
+      router.replace("/");
+    }
+  }, []);
+
   return (
     <div className="h-screen px-10">
       <div className="container m-auto flex flex-col md:flex-row items-center gap-5 md:gap-16">
