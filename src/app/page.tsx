@@ -2,20 +2,13 @@
 import * as React from "react";
 import Image from "next/image";
 import { apiCall } from "@/helper/apiCall";
+import { dataCategory } from "@/helper/dataCategory";
 
 const Home: React.FunctionComponent = () => {
   const [articleList, setArticleList] = React.useState<any[]>([]);
   const [category, setCategory] = React.useState<string[]>([
     "All",
-    "Teknologi",
-    "Strategi",
-    "Penulisan",
-    "CMS",
-    "SEO",
-    "Motivasi",
-    "UI/UX",
-    "Frontend",
-    "Tutorial",
+    ...dataCategory,
   ]);
   const [filterCategory, setFilterCategory] = React.useState<string>("All");
 
