@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { dataCategory } from "@/helper/dataCategory";
+import { Textarea } from "@/components/ui/textarea";
 
 interface IUpdateArticleDialogProps {
   data: any;
@@ -44,9 +45,9 @@ const UpdateArticleDialog: React.FunctionComponent<
           <div>
             <FormInput type="text" name="title" label="Title" />
             <FormInput type="text" name="thumbnail" label="Thumbnail" />
-            <div>
+            <div id="category">
               <label className="mb-2 font-medium">Category</label>
-              <Select>
+              <Select defaultValue={props.data?.category}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Category" />
                 </SelectTrigger>
@@ -60,6 +61,10 @@ const UpdateArticleDialog: React.FunctionComponent<
                   })}
                 </SelectContent>
               </Select>
+            </div>
+            <div id="content">
+              <label className="mb-2 font-medium">Content</label>
+              <Textarea defaultValue={props.data?.content} />
             </div>
           </div>
         </DialogContent>
