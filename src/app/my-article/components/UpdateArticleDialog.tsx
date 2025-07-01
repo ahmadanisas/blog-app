@@ -79,13 +79,13 @@ const UpdateArticleDialog: React.FunctionComponent<
               <Textarea defaultValue={props.data?.content} />
             </div>
           </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button type="button">Save changes</Button>
+          </DialogFooter>
         </DialogContent>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
-          <Button type="button">Save changes</Button>
-        </DialogFooter>
       </form>
     </Dialog>
   );
