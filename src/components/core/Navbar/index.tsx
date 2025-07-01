@@ -3,10 +3,30 @@ import * as React from "react";
 import Link from "next/link";
 import { FaSearch } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/lib/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { apiCall } from "@/helper/apiCall";
+import { setSignIn, setSignOut } from "@/lib/redux/features/userSlice";
+import { Button } from "@/components/ui/button";
 
 const Navbar: React.FunctionComponent = () => {
   const userMail = useAppSelector((state) => state.userReducer.email);
+  const dispatch = useAppDispatch();
+
+  const keepLogin = async () => {
+    try {
+      const tkn = localStorage.getItem("tkn");
+      if (tkn) {
+        const res = await apiCall.get(`/accounts/${tkn}`);
+        dispatch(setSignIn(res.data));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  React.useEffect(() => {
+    keepLogin();
+  }, []);
 
   return (
     <div className="flex items-center justify-between px-6 lg:px-24 py-5">
@@ -28,7 +48,18 @@ const Navbar: React.FunctionComponent = () => {
         </li>
         <li className="flex items-center gap-2">
           {userMail ? (
-            <p>{userMail}</p>
+            <div className="flex items-center gap-2">
+              <p>{userMail}</p>
+              <Button
+                type="button"
+                onClick={() => {
+                  dispatch(setSignOut());
+                  localStorage.removeItem("tkn");
+                }}
+              >
+                Sign Out
+              </Button>
+            </div>
           ) : (
             <>
               <Link

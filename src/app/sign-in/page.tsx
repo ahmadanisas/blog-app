@@ -29,7 +29,9 @@ const SignInPage: React.FunctionComponent = () => {
         },
       });
       dispatch(setSignIn(res.data[0]));
-      console.log(res.data);
+
+      // Store objectId to localStorage
+      localStorage.setItem("tkn", res.data[0].objectId);
 
       alert("Selamat datang");
       router.replace("/");
