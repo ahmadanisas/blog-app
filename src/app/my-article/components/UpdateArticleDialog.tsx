@@ -43,8 +43,18 @@ const UpdateArticleDialog: React.FunctionComponent<
             </DialogDescription>
           </DialogHeader>
           <div>
-            <FormInput type="text" name="title" label="Title" />
-            <FormInput type="text" name="thumbnail" label="Thumbnail" />
+            <FormInput
+              type="text"
+              name="title"
+              label="Title"
+              defaultValue={props.data?.title}
+            />
+            <FormInput
+              type="text"
+              name="thumbnail"
+              label="Thumbnail"
+              defaultValue={props.data?.thumbnail}
+            />
             <div id="category">
               <label className="mb-2 font-medium">Category</label>
               <Select defaultValue={props.data?.category}>
