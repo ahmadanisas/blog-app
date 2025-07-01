@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import UpdateArticleDialog from "./components/UpdateArticleDialog";
 
 const PostPage: React.FunctionComponent = () => {
   const router = useRouter();
@@ -90,24 +91,7 @@ const PostPage: React.FunctionComponent = () => {
                 >
                   Delete
                 </Button>
-                <Dialog>
-                  <form>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        Edit
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Edit profile</DialogTitle>
-                        <DialogDescription>
-                          Make changes to your profile here. Click save when
-                          you&apos;re done.
-                        </DialogDescription>
-                      </DialogHeader>
-                    </DialogContent>
-                  </form>
-                </Dialog>
+                <UpdateArticleDialog />
               </div>
             </div>
           </div>
