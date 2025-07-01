@@ -38,6 +38,17 @@ const PostPage: React.FunctionComponent = () => {
     getArticlesList();
   }, []);
 
+  const onDelete = async (objectId: string) => {
+    try {
+      if (confirm("Yakin mau menghapus ?")) {
+        await apiCall.delete(`/articles/${objectId}`);
+        getArticlesList();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const printArticleList = () => {
     return articleList.map((val: any, idx: number) => {
       return (
@@ -59,7 +70,12 @@ const PostPage: React.FunctionComponent = () => {
                 </h6>
               </div>
               <div className="flex items-center gap-4">
-                <Button variant="outline" size="sm">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onDelete(val.objectId)}
+                >
                   Delete
                 </Button>
                 <Button variant="outline" size="sm">
@@ -91,6 +107,7 @@ const PostPage: React.FunctionComponent = () => {
       console.log(error);
     }
   };
+
   return (
     <div id="timeline" className="w-full md:flex gap-4">
       <div className="lg:w-1/2 items-center">
