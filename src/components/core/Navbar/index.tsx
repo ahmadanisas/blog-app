@@ -50,6 +50,7 @@ const Navbar: React.FunctionComponent = () => {
           {userMail ? (
             <div className="flex items-center gap-2">
               <p>{userMail}</p>
+              <Link href="/my-article">My Article</Link>
               <Button
                 type="button"
                 onClick={() => {
