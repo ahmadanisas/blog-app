@@ -42,6 +42,7 @@ const SignUpPage: React.FunctionComponent = () => {
       console.log(username, email, password);
 
       // - menyimpan data ke database backendless
+      // https://pertzinc-us.backendless.app/api/data/article
       const response = await apiCall.post("/accounts", {
         username,
         email,
