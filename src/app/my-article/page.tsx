@@ -12,15 +12,9 @@ import {
 } from "@/components/ui/select";
 import { apiCall } from "@/helper/apiCall";
 import { toast } from "react-toastify";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog"; // Import Dialog and DialogContent
 import UpdateArticleDialog from "./components/UpdateArticleDialog";
+import { dataCategory } from "@/helper/dataCategory"; // Import dataCategory
 
 const PostPage: React.FunctionComponent = () => {
   const router = useRouter();
@@ -30,31 +24,32 @@ const PostPage: React.FunctionComponent = () => {
   const articleCategoryRef = React.useRef<string | null>(null);
 
   const [articleList, setArticleList] = React.useState<any[]>([]);
+  const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
+  const [currentEditingArticle, setCurrentEditingArticle] = React.useState<any | null>(null);
 
   const getArticlesList = async () => {
     try {
       const res = await apiCall.get(
         "/articles?pageSize=100&sortBy=%60created%60%20desc"
       );
-
       setArticleList(res.data);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to fetch articles.");
     }
   };
 
-  // useEffect hanya akan menjalankan fungsi didalamnya sekali saat pertama kali render halaman
   React.useEffect(() => {
     if (localStorage.getItem("tkn")) {
       getArticlesList();
     } else {
       router.replace("/sign-in");
     }
-  }, []);
+  });
 
   const onDelete = async (objectId: string) => {
     try {
-      if (confirm("Yakin mau menghapus ?")) {
+      if (confirm("Are you sure you want to delete this?")) {
         await apiCall.delete(`/articles/${objectId}`);
         toast.success("Delete article success", {
           autoClose: 3000,
@@ -63,6 +58,31 @@ const PostPage: React.FunctionComponent = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Failed to delete article.");
+    }
+  };
+
+  const handleOpenEditDialog = (article: any) => {
+    setCurrentEditingArticle(article);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveUpdatedArticle = async (updatedData: any) => {
+    try {
+      if (!updatedData.objectId) {
+        toast.error("Article ID is missing for update.");
+        return;
+      }
+      await apiCall.put(`/articles/${updatedData.objectId}`, updatedData);
+      toast.success("Article updated successfully!", {
+        autoClose: 3000,
+      });
+      getArticlesList();
+      setIsEditDialogOpen(false); // Close dialog on successful save
+      setCurrentEditingArticle(null); // Clear editing state
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update article.");
     }
   };
 
@@ -95,7 +115,14 @@ const PostPage: React.FunctionComponent = () => {
                 >
                   Delete
                 </Button>
-                <UpdateArticleDialog data={val} />
+                {/* Use a regular Button and control the Dialog state manually */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleOpenEditDialog(val)}
+                >
+                  Edit
+                </Button>
               </div>
             </div>
           </div>
@@ -106,20 +133,32 @@ const PostPage: React.FunctionComponent = () => {
 
   const onCreateArticle = async () => {
     try {
-      if (articleTitleRef.current) {
-        const response = await apiCall.post("/articles", {
+      if (articleTitleRef.current && articleCategoryRef.current && articleContentRef.current && articleThumbnailRef.current) {
+        if (!articleTitleRef.current.value || !articleCategoryRef.current || !articleContentRef.current.value || !articleThumbnailRef.current.value) {
+          toast.error("Please fill in all article fields.");
+          return;
+        }
+
+        await apiCall.post("/articles", {
           title: articleTitleRef.current.value,
           category: articleCategoryRef.current,
-          thumbnail: articleThumbnailRef.current?.value,
-          content: articleContentRef.current?.value,
+          thumbnail: articleThumbnailRef.current.value,
+          content: articleContentRef.current.value,
         });
         getArticlesList();
-        alert("Tambah data article berhasil");
+        toast.success("Article added successfully!");
+
+        // Clear form fields
+        articleTitleRef.current.value = "";
+        articleThumbnailRef.current.value = "";
+        if (articleContentRef.current) articleContentRef.current.value = "";
+        articleCategoryRef.current = null;
       } else {
-        alert("Form article jangan sampai kosong");
+        toast.error("Please fill in all article fields.");
       }
     } catch (error) {
       console.log(error);
+      toast.error("Failed to create article.");
     }
   };
 
@@ -147,15 +186,19 @@ const PostPage: React.FunctionComponent = () => {
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Business">Business</SelectItem>
-                <SelectItem value="Technology">Technology</SelectItem>
-                <SelectItem value="Economics">Economics</SelectItem>
-                <SelectItem value="Lifestyle">Lifestyle</SelectItem>
-                <SelectItem value="Goverment">Goverment</SelectItem>
+                {dataCategory.map((category: string) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
-          <textarea ref={articleContentRef} />
+          <textarea
+            ref={articleContentRef}
+            placeholder="Write your article content here..."
+            className="w-full p-3 rounded-md focus:outline-none min-h-[100px]"
+          />
           <hr className="md:mb-4" />
           <div className="flex p-2 justify-between items-center">
             <div className="flex gap-2">
@@ -174,6 +217,17 @@ const PostPage: React.FunctionComponent = () => {
         </div>
       </div>
       <div className="lg:w-1/2 space-y-3">{printArticleList()}</div>
+
+      {currentEditingArticle && (
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <UpdateArticleDialog
+              data={currentEditingArticle}
+              onSave={handleSaveUpdatedArticle}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };
